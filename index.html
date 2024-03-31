@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silly Face</title>
+<style>
+body {
+  background-color: #121212;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow-y: hidden; /* remove vertical scrollbar */
+}
+
+.silly-face-container {
+  text-align: center;
+}
+
+.silly-face {
+  font-size: 36px;
+  color: #FFFFFF; /* white text color */
+  font-family: 'Comic Sans MS', cursive; /* readable and silly font */
+  user-select: none; /* make text unselectable */
+}
+
+.face-description {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6); /* semi-transparent white */
+  font-family: Arial, sans-serif; /* readable font */
+  font-weight: bold; /* bold text */
+  user-select: none; /* make text unselectable */
+}
+
+.love-message {
+  position: absolute;
+  bottom: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+  font-family: Arial, sans-serif; /* different font */
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  pointer-events: none; /* make it unclickable */
+  user-select: none; /* make text unselectable */
+}
+
+.same-face-message {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+  font-family: Arial, sans-serif; /* different font */
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  pointer-events: none; /* make it unclickable */
+  user-select: none; /* make text unselectable */
+}
+
+.cat-message {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+  font-family: Arial, sans-serif; /* different font */
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  pointer-events: none; /* make it unclickable */
+  user-select: none; /* make text unselectable */
+}
+
+@keyframes changeFace {
+  0% { content: ":P"; } /* default silly face */
+  3.23% { content: ":D"; } /* big happy :D */
+  6.45% { content: ";)"; } /* winking */
+  9.68% { content: ">:3"; } /* mischievous */
+  12.9% { content: "XD"; } /* laughing */
+  16.13% { content: "O_O"; } /* surprised */
+  19.35% { content: "^_^"; } /* happy */
+  22.58% { content: ">.<"; } /* frustration */
+  25.81% { content: ":3"; } /* cat smile */
+  29.03% { content: "o.o"; } /* curious */
+  32.26% { content: ">.>"; } /* sneaky */
+  35.48% { content: "<3"; } /* love */
+  38.71% { content: ":O"; } /* surprise */
+  41.94% { content: ">_<"; } /* disappointment */
+  45.16% { content: ":|"; } /* indifference */
+  48.39% { content: ":*"; } /* kiss */
+  51.61% { content: "B)"; } /* cool */
+  54.84% { content: ":S"; } /* awkward */
+  58.06% { content: ":$"; } /* shy */
+  61.29% { content: ":/"; } /* confused */
+  64.52% { content: ":!"; } /* exasperation */
+  67.74% { content: ";("; } /* crying */
+  70.97% { content: "O_0"; } /* confusion */
+  74.19% { content: ":B"; } /* smirk */
+  77.42% { content: ":^)"; } /* smile */
+  80.65% { content: "0w0"; } /* cute surprise */
+  83.87% { content: ">w<"; } /* excited */
+  87.1% { content: "o3o"; } /* curiosity overload */
+  90.32% { content: "X3"; } /* playful */
+  93.55% { content: ":9"; } /* yum */
+  96.77% { content: "B3"; } /* cheeky */
+  100% { content: ">.<"; } /* embarrassed */
+}
+</style>
+</head>
+<body>
+<div class="silly-face-container">
+  <div class="silly-face" id="silly-face">:P</div>
+  <div class="face-description" id="face-description">(default)</div>
+</div>
+<div class="love-message" id="love-message">you found love, congratulations!</div>
+<div class="same-face-message" id="same-face-message">woah, you got the same face twice!</div>
+<div class="cat-message" id="cat-message"></div>
+
+<script>
+const sillyFace = document.getElementById('silly-face');
+const faceDescription = document.getElementById('face-description');
+const loveMessage = document.getElementById('love-message');
+const sameFaceMessage = document.getElementById('same-face-message');
+const catMessage = document.getElementById('cat-message');
+let previousFace = '';
+
+// Function to change the face
+function changeFace() {
+  const faces = [
+  { face: ':P', description: '(tongue out)' },
+{ face: ':D', description: '(big happy :D)' },
+{ face: ';)', description: '(winking)' },
+{ face: '>:3', description: '(mischievous)' },
+{ face: 'XD', description: '(laughing)' },
+{ face: 'O_O', description: '(surprised)' },
+{ face: '^_^', description: '(happy)' },
+{ face: '>.<', description: '(frustration)' },
+{ face: ':3', description: '(cat smile)' },
+{ face: 'o.o', description: '(curious)' },
+{ face: '>.>', description: '(sneaky)' },
+{ face: '<3', description: '(love)' },
+{ face: ':O', description: '(surprise)' },
+{ face: '>_<', description: '(disappointment)' },
+{ face: ':|', description: '(indifference)' },
+{ face: ':*', description: '(kiss)' },
+{ face: 'B)', description: '(cool)' },
+{ face: ':S', description: '(awkward)' },
+{ face: ':$', description: '(shy)' },
+{ face: ':/', description: '(confused)' },
+{ face: ':!', description: '(exasperation)' },
+{ face: ';(', description: '(crying)' },
+{ face: 'O_0', description: '(confusion)' },
+{ face: ':B', description: '(smirk)' },
+{ face: ':^)', description: '(smile)' },
+{ face: ':O', description: '(big eyes surprise)' },
+{ face: '0w0', description: '(cute surprise)' },
+{ face: '>w<', description: '(excited)' },
+{ face: 'o3o', description: '(curiosity overload)' },
+{ face: ':O', description: '(shocked)' },
+{ face: 'X3', description: '(playful)' },
+{ face: ':9', description: '(yum)' },
+{ face: 'B3', description: '(cheeky)' },
+{ face: '>.<"', description: '(embarrassed)' },
+{ face: 'XD', description: '(laughing hard)' },
+{ face: '>.<;;', description: '(blushing)' },
+{ face: ':B', description: '(wink with a smirk)' },
+{ face: ';3', description: '(flirty wink)' },
+{ face: ':O', description: '(big eyes surprise)' },
+{ face: ':o', description: '(wide-eyed)' },
+{ face: ':3c', description: '(smiling shyly)' },
+{ face: ':U', description: '(confused)' },
+{ face: '8D', description: '(excited)' },
+{ face: 'QwQ', description: '(crying heavily)' },
+{ face: ':X', description: '(silence)' },
+{ face: 'T_T', description: '(tears)' },
+{ face: 'xD', description: '(laughing with eyes closed)' },
+{ face: 'o_o', description: '(surprise or confusion)' },
+{ face: ':D :D :D', description: '(extreme happiness)' }
+
+  ]; // Array of faces
+  const randomIndex = Math.floor(Math.random() * faces.length); // Get random index
+  const selectedFace = faces[randomIndex]; // Get the new face
+
+  if (selectedFace.face === previousFace) {
+    sameFaceMessage.style.opacity = 1;
+    setTimeout(() => {
+      sameFaceMessage.style.opacity = 0;
+    }, 3000); // Hide the message after 3 seconds
+  } else {
+    sameFaceMessage.style.opacity = 0;
+  }
+
+  if ([':3', ';3', '>:3', 'X3'].includes(selectedFace.face)) {
+    catMessage.textContent = 'woah, you got a kitty cat!';
+    catMessage.style.opacity = 1;
+    setTimeout(() => {
+      catMessage.style.opacity = 0;
+    }, 3000); // Hide the message after 3 seconds
+  } else {
+    catMessage.style.opacity = 0;
+  }
+
+  if (selectedFace.face === '<3') {
+    loveMessage.style.opacity = 1;
+    setTimeout(() => {
+      loveMessage.style.opacity = 0;
+    }, 3000); // Hide the message after 3 seconds
+  } else {
+    loveMessage.style.opacity = 0;
+  }
+
+  sillyFace.textContent = selectedFace.face; // Set the new face
+  faceDescription.textContent = selectedFace.description; // Set the face description
+
+  previousFace = selectedFace.face; // Update previous face
+}
+
+// Event listener for click event
+document.addEventListener('click', changeFace);
+</script>
+</body>
+</html>
